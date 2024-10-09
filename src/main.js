@@ -1,10 +1,22 @@
-import Vue from "vue";
-// import Vue from "./my-vue/index";
-// import App from "./App.js"; 
-import App from "./App.vue"; 
+// import Vue from "vue"; 
+// import App from "./App.vue"; 
+// function render(h){
+//     return h(App);
+// }  
+// new Vue({
+//     render
+// }).$mount("#app");
+
+import Vue from "./my-vue/index"; 
 function render(h){
-    return h(App);
-}  
+    const _vm = this;
+    return h("div", 
+        [
+            _vm._v(" Hello World "), 
+            h("ul", [h("li", [_vm._v("1")]), h("li", [_vm._v("2")])])
+        ]
+    )
+}
 new Vue({
     render
 }).$mount("#app");

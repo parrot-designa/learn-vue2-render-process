@@ -5,7 +5,7 @@ export default function mountComponent(vm, mountNode){
 
     function updateComponent(){
         const vnode = vm._render();
-        console.log(vnode)
+        vm._update(vnode);
     }
 
     new Watcher(updateComponent)

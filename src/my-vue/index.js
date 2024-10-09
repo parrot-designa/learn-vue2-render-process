@@ -2,14 +2,13 @@
 import mountComponent from "./mountComponent";
 import createElement from "./createElement";
 import VNode from "./vnode";
+import __patch__ from "./__patch__";
 
 export default class Vue {
-    $options
-    vm
+    $options 
     constructor(options){
         // 初始化有一些方法
         this.$options = options;
-        this.vm = this;
     }  
     
     $mount(name){
@@ -19,23 +18,31 @@ export default class Vue {
     }
 
     _render(){
-        const { render } = this.vm.$options;
-        const vnode = render.call(this.vm, (...arg)=>createElement(this.vm,...arg));
+        const { render } = this.$options;
+        const vnode = render.call(this, (...arg)=>createElement(this,...arg));
         return vnode;
     }
 
     _update(vnode){
-        __patch__(vnode);
+        const prevVnode = this.$vnode;
+        this.$vnode = vnode;
+        // 如果vm上不存在$vnode 则表示为首次渲染
+        if(!prevVnode){
+            this.$el = __patch__(this.$el,vnode);
+        }
+        
     }
 
     _v(val){
-        new VNode(undefined, undefined, undefined, String(val))
+       return new VNode({text: String(val)})
     }
 }
 
-Vue.extend = function(extendOptions){
-    const Super = this
-    const Sub = function VueComponent() {}
-    Sub.prototype = Object.create(Super.prototype);
+Vue.extend = function(){ 
+    class Sub extends Vue{ 
+        constructor(options){
+            super(options);
+        }
+    } 
     return Sub;
 }
